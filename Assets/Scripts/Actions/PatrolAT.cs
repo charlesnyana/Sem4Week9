@@ -5,9 +5,12 @@ using System.Collections.Generic;
 
 namespace NodeCanvas.Tasks.Actions {
 
-	public class ChangeTargetAT : ActionTask {
+	public class PatrolAT : ActionTask {
 		public List<Transform> patrolPoints;
-		public BBParameter<Transform> currentTarget;
+		public BBParameter<Vector3> acceleration;
+		public float accelerationStrength;
+		public float arrivalDistance;
+
 
 		private int currentPatrolPointIndex = 0;
 
@@ -21,12 +24,19 @@ namespace NodeCanvas.Tasks.Actions {
 		//Call EndAction() to mark the action as finished, either in success or failure.
 		//EndAction can be called from anywhere.
 		protected override void OnExecute() {
-			currentPatrolPointIndex++;
-			if(patrolPoints.Count <= currentPatrolPointIndex)
+			float distanceToTarget = Vector3.Distance(patrolPoints[currentPatrolPointIndex].position, agent.transform.position);
+
+			if (distanceToTarget < arrivalDistance)
 			{
-				currentPatrolPointIndex = 0;
+				currentPatrolPointIndex++;
+				if (currentPatrolPointIndex >= patrolPoints.Count)
+				{
+					currentPatrolPointIndex = 0;
+				}
 			}
-			currentTarget.value = patrolPoints[currentPatrolPointIndex];
+			Vector3 moveDirection = patrolPoints[currentPatrolPointIndex].position - agent.transform.position;
+			moveDirection = new Vector3(moveDirection.x, 0f, moveDirection.z);
+			acceleration.value += moveDirection.normalized * accelerationStrength * Time.deltaTime;
 			EndAction(true);
 		}
 

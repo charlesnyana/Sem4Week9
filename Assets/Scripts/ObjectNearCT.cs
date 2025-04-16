@@ -7,7 +7,7 @@ namespace NodeCanvas.Tasks.Conditions {
 
 	public class ObjectNearCT : ConditionTask {
 
-		public Transform obstacle;
+		public BBParameter<Transform> target;
 		public BBParameter<float> arrivalDistance;
 
 		//Use for initialization. This is called only once in the lifetime of the task.
@@ -30,7 +30,7 @@ namespace NodeCanvas.Tasks.Conditions {
 		//Return whether the condition is success or failure.
 		protected override bool OnCheck() {
 			
-			bool objectCheck = Vector3.Distance(obstacle.position, agent.transform.position) <= arrivalDistance.value;
+			bool objectCheck = Vector3.Distance(target.value.position, agent.transform.position) <= arrivalDistance.value;
 
             return objectCheck;
 		}

@@ -1,14 +1,10 @@
 using NodeCanvas.Framework;
 using ParadoxNotion.Design;
-using UnityEngine;
 
 
 namespace NodeCanvas.Tasks.Conditions {
 
-	public class TargetInRangeCT : ConditionTask {
-
-		public BBParameter<Transform> currentTarget;
-		public float rangeDistance;
+	public class CheckDistanceCT : ConditionTask {
 
 		//Use for initialization. This is called only once in the lifetime of the task.
 		//Return null if init was successfull. Return an error string otherwise
@@ -29,8 +25,7 @@ namespace NodeCanvas.Tasks.Conditions {
 		//Called once per frame while the condition is active.
 		//Return whether the condition is success or failure.
 		protected override bool OnCheck() {
-			float distanceToTarget = Vector3.Distance(currentTarget.value.position, agent.transform.position);
-			return distanceToTarget < rangeDistance;
+			return true;
 		}
 	}
 }

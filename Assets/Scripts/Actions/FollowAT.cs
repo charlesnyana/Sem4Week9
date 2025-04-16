@@ -2,40 +2,34 @@ using NodeCanvas.Framework;
 using ParadoxNotion.Design;
 using UnityEngine;
 
-
 namespace NodeCanvas.Tasks.Actions {
 
-	public class MoveTowardsAT : ActionTask {
+	public class FollowAT : ActionTask {
 
+		public BBParameter<Vector3> acceleration;
 		public BBParameter<Transform> target;
-		public Transform targetA;
-        public Transform targetB;
-        public BBParameter<float> arrivalDistance;
-		public float speed;
+		public float stoppingDistance;
+		public float steeringAcceleration;
 
 		//Use for initialization. This is called only once in the lifetime of the task.
 		//Return null if init was successfull. Return an error string otherwise
 		protected override string OnInit() {
-			target.value = targetA;
-
-            return null;
+			return null;
 		}
 
 		//This is called once each time the task is enabled.
 		//Call EndAction() to mark the action as finished, either in success or failure.
 		//EndAction can be called from anywhere.
 		protected override void OnExecute() {
-			Vector3 destinationVector = (target.value.position - agent.transform.position).normalized;
-			agent.transform.position += destinationVector * Time.deltaTime * speed;
-
-			float distance = Vector3.Distance(target.value.position, agent.transform.position);
-
-			if (distance <= arrivalDistance.value)
+			float distanceToTarget = Vector3.Distance(agent.transform.position, target.value.position);
+			if (distanceToTarget < stoppingDistance)
 			{
-				if (target.value == targetA) target.value = targetB;
-				else target.value = targetA;
-            }
-				
+				EndAction(true);
+				return;
+			}
+			Vector3 direction = target.value.position - agent.transform.position;
+			direction = new Vector3(direction.x, 0f, direction.z);
+			acceleration.value += direction.normalized * steeringAcceleration * Time.deltaTime;
 			EndAction(true);
 		}
 

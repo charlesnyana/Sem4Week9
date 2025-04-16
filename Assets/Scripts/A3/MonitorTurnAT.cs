@@ -10,6 +10,9 @@ namespace NodeCanvas.Tasks.Actions {
         public BBParameter<float> rotationSpeed = 30f; // Degrees per second
         public BBParameter<float> maxAngle = 45f;
 
+
+        public GameObject alertSig;
+
         private float currentYRotation;
         private int direction = -1; //
         private float baseY;
@@ -22,8 +25,10 @@ namespace NodeCanvas.Tasks.Actions {
 
         protected override void OnUpdate()
         {
+            alertSig.SetActive(false);
             if (target.value != null)
             {
+                alertSig.SetActive(true);
                 EndAction(true); // Target found, don't rotate
                 return;
             }
@@ -36,8 +41,7 @@ namespace NodeCanvas.Tasks.Actions {
             {
                 direction *= -1; // Reverse direction
             }
-
-            // Keep running
+            EndAction(false);   
         }
     }
 }

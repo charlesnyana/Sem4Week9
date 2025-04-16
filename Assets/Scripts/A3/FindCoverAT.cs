@@ -1,15 +1,14 @@
 using NodeCanvas.Framework;
 using ParadoxNotion.Design;
-using UnityEngine;
 
 
 namespace NodeCanvas.Tasks.Actions {
 
-	public class MonitorDetectAT : ActionTask {
+	public class FindCoverAT : ActionTask {
 
-		public BBParameter<bool> isScanning;
-        public BBParameter<GameObject> target;
-        protected override string OnInit() {
+		//Use for initialization. This is called only once in the lifetime of the task.
+		//Return null if init was successfull. Return an error string otherwise
+		protected override string OnInit() {
 			return null;
 		}
 
@@ -17,11 +16,6 @@ namespace NodeCanvas.Tasks.Actions {
 		//Call EndAction() to mark the action as finished, either in success or failure.
 		//EndAction can be called from anywhere.
 		protected override void OnExecute() {
-			Debug.Log("Detected someone.");
-			
-			Blackboard targetBB = target.value.GetComponent<Blackboard>();
-			targetBB.SetVariableValue("isCaught", true);
-
 			EndAction(true);
 		}
 
