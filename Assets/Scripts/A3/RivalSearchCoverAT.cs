@@ -43,7 +43,10 @@ namespace NodeCanvas.Tasks.Actions {
                 targetTransform.value = detectedColliders[0].GetComponentInParent<Transform>();
                 Debug.Log("Found cover in " + detectedColliders[0]);
                 targetPos.value = targetTransform.value.position;
-                EndAction(true);
+                EndAction(false);
+            } else
+            {
+                detectedColliders[0] = null;
             }
         }
 

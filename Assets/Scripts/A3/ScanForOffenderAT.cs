@@ -41,11 +41,11 @@ namespace NodeCanvas.Tasks.Actions {
 
                     target.value = hit.collider.gameObject;
                     EndAction(true);
-                    return;
                 }
                 else
                 {
                     Debug.DrawRay(origin, direction * scanRange.value, Color.gray, 0.2f);
+                    EndAction(false);
                 }
                 DrawVisionCone();
             }

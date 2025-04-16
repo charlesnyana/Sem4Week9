@@ -32,8 +32,12 @@ namespace NodeCanvas.Tasks.Actions {
 
 		//Called once per frame while the action is active.
 		protected override void OnUpdate() {
+
             targetPos.value = target.value.transform.position;
-            EndAction(true);
+			Debug.Log("moving to crush");
+			EndAction(true);
+
+			
         }
 
 		//Called when the task is disabled.

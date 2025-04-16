@@ -13,7 +13,7 @@ namespace NodeCanvas.Tasks.Actions {
         public BBParameter<int> detectionRate;
         Blackboard targetBB;
 		float detectionProgress;
-
+        bool isHiding;
 		public GameObject alertSig;
 
         //Use for initialization. This is called only once in the lifetime of the task.
@@ -28,28 +28,29 @@ namespace NodeCanvas.Tasks.Actions {
 		protected override void OnExecute() {
             targetBB = target.value.GetComponent<Blackboard>();
             detectionProgress = targetBB.GetVariableValue<float> ("detectionProgress");
+            
         }
 
 		//Called once per frame while the action is active.
 		protected override void OnUpdate() {
 			if (detectionProgress >= maxDetectionProgress.value) //if detection progress is maxed out, AT has succeeded and ends.
+                alertSig.SetActive(false);
                 EndAction(true);
+            alertSig.SetActive(true);
+            isHiding = targetBB.GetVariableValue<bool>("isHiding");
+            //Increments detection rate of target if AT end conditions are met.
+            if (isHiding == false)
+            {
+                detectionProgress += detectionRate.value * Time.deltaTime;
+                targetBB.SetVariableValue("detectionProgress", detectionProgress);
+            } 
+                
 
-			if (!targetBB.GetVariableValue<bool>("isCaught")) // if target is no longer caught (hiding), action ends and fails.
-			{
-				target.value = null;
-                EndAction(false);
-            }
-
-			//Increments detection rate of target if neither AT end conditions are met.
-			detectionProgress += detectionRate.value * Time.deltaTime;
-            targetBB.SetVariableValue("detectionProgress", detectionProgress);
-
-			alertSig.SetActive(true);
+			
         }
         protected override void OnStop()
         {
-            alertSig.SetActive(false);
+            
         }
         protected override void OnPause()
         {

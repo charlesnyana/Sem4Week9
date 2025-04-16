@@ -25,12 +25,13 @@ namespace NodeCanvas.Tasks.Actions {
 
         protected override void OnUpdate()
         {
-            alertSig.SetActive(false);
+            
             if (target.value != null)
             {
                 alertSig.SetActive(true);
-                EndAction(true); // Target found, don't rotate
-                return;
+            } else
+            {
+                alertSig.SetActive(false);
             }
 
             float step = rotationSpeed.value * Time.deltaTime * direction;
@@ -41,7 +42,7 @@ namespace NodeCanvas.Tasks.Actions {
             {
                 direction *= -1; // Reverse direction
             }
-            EndAction(false);   
+    
         }
     }
 }

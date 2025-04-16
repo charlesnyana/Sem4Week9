@@ -7,11 +7,13 @@ using UnityEngine.AI;
 namespace NodeCanvas.Tasks.Actions {
 
 	public class RivalUpdateAT : ActionTask {
-        public BBParameter<Vector3> velocity;
-        public BBParameter<Vector3> acceleration;
+
         public BBParameter<bool> isCaught;
+        public BBParameter<bool> isHiding;
         public BBParameter<float> detectionProgress;
         public float detectionDecay = 1;
+        public float detectionRate = 1;
+        public BBParameter<int> maxDetection;
 
         public BBParameter<Vector3> targetPos;
         public float sampleRate;
@@ -44,10 +46,25 @@ namespace NodeCanvas.Tasks.Actions {
 
             if (detectionProgress.value > 0 && !isCaught.value)
             {
-                detectionProgress.value -= Time.deltaTime + detectionDecay;
+                detectionProgress.value -= Time.deltaTime * detectionDecay;
             }
 
-            if (timeSinceLastSample > sampleRate)
+            if (isCaught.value && !isHiding.value)
+            {
+                detectionProgress.value += Time.deltaTime * detectionRate;
+            }
+
+            if (detectionProgress.value >=  maxDetection.value)
+            {
+                navAgent.isStopped = true;
+                Debug.Log("rival bakc to start");
+                navAgent.Warp(spawnpoint.value);
+                targetPos.value = spawnpoint.value;
+                detectionProgress.value = 0;
+                isCaught.value = false;
+            } 
+
+                if (timeSinceLastSample > sampleRate)
             {
                 if (lastDestination != targetPos.value)
                 {
@@ -63,7 +80,7 @@ namespace NodeCanvas.Tasks.Actions {
                     }
                 }
             }
-            EndAction();
+            EndAction(true);
         }
 
 		//Called when the task is disabled.

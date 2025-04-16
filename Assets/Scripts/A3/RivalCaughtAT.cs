@@ -35,16 +35,14 @@ namespace NodeCanvas.Tasks.Actions {
 		//Called once per frame while the action is active.
 		protected override void OnUpdate() {
             
-			if (detectProgress.value >= maxDetectProgress.value) //if detected fully, returns to seat
+			if (detectProgress.value >= maxDetectProgress.value) //if detected fully, returns to seat ans reset detection
 			{
-                NavMeshAgent.Warp(spawnpoint.value);
-                targetPos.value = spawnpoint.value;
-                isCaught.value = false;
-				detectProgress.value = 0;
-                EndAction(false);
+				detectProgress.value = 0f;
+				isCaught.value = false;
+                EndAction(true);
             } else
 			{
-				EndAction(true); // continue to cover behavior
+				EndAction(false);
 			}
             
         }

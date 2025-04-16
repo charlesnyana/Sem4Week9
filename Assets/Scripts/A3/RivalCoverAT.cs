@@ -14,7 +14,8 @@ namespace NodeCanvas.Tasks.Actions {
 
 		public Blackboard monitorBB;
 		public BBParameter<bool> isCaught;
-		public BBParameter<Transform> cover;
+        public BBParameter<bool> isHiding;
+        public BBParameter<Transform> cover;
 
 		//Use for initialization. This is called only once in the lifetime of the task.
 		//Return null if init was successfull. Return an error string otherwise
@@ -33,22 +34,31 @@ namespace NodeCanvas.Tasks.Actions {
 		}
 
 		//Called once per frame while the action is active.
-		protected override void OnUpdate() {
+		protected override void OnUpdate()
+		{
 			Debug.Log("hiding");
-			collider.enabled = false;
-			hand.SetActive(false);
-            if (monitorBB.GetVariableValue<bool>("isScanning") == false)
+
+			if (monitorBB.GetVariableValue<bool>("isScanning") == true)
 			{
-                isCaught.value = false; // resets being caught
-				cover.value = null;
-                EndAction(true); //waits for monitor to stop scanning.
-			} else
+				collider.enabled = false;
+				hand.SetActive(false);
+				isHiding.value = true;
 				EndAction(false);
+			} else
+			{
+				collider.enabled = true;
+				hand.SetActive(true);
+                isHiding.value = false;
+				isCaught.value = false;
+				EndAction(true);
+			}
+
 		}
 
 		//Called when the task is disabled.
 		protected override void OnStop() {
 			navAgent.baseOffset = 1.3f;
+            //isHiding.value = false;
         }
 
 		//Called when the task is paused.
